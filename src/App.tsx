@@ -10,7 +10,7 @@ import { ContactPage } from './pages/ContactPage';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/vibing-food-catering/">
       <CartProvider>
         <Routes>
           <Route element={<Layout />}>
