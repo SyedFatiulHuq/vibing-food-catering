@@ -13,7 +13,7 @@ import { ContactPage } from "./pages/ContactPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/vibing-food-catering/">
       <CartProvider>
         <OrdersProvider>
           <Routes>
