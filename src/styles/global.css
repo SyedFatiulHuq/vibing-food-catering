@@ -2,17 +2,32 @@
   --color-bg: #f6f1e8;
   --color-bg-card: #fffdf8;
   --color-ink: #1c2521;
-  --color-muted: #5c665f;
+  /* Muted foreground ~7:1 on --color-bg (1.4.3 / 1.4.6) */
+  --color-muted: #4a534d;
   --color-accent: #2d4a3e;
   --color-accent-soft: #e8dcc8;
   --color-warm: #c49a6c;
-  --color-border: #dcd3c4;
+  /* ~3:1 vs card/bg for outlines & inputs (1.4.11) */
+  --color-border: #9a8870;
+  --color-focus-ring: #173428;
   --radius: 12px;
   --shadow: 0 12px 40px rgba(28, 37, 33, 0.08);
   font-family: "DM Sans", system-ui, sans-serif;
   color: var(--color-ink);
   background: var(--color-bg);
-  line-height: 1.5;
+  line-height: 1.625;
+}
+
+/* Respect user/OS reduced motion preference (2.2.2) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 *,
@@ -44,6 +59,25 @@ a:hover {
   text-decoration: underline;
 }
 
+a:not([aria-current="page"]) {
+  text-underline-offset: 0.12em;
+}
+
+/* Focus visible — 4.1.2; non-text distinguishable from backgrounds (2.4.7 / 4.1.11) */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
 img {
   max-width: 100%;
   display: block;
@@ -66,6 +100,8 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  min-height: 44px;
+  min-width: 44px;
   padding: 0.65rem 1.25rem;
   border-radius: 999px;
   border: none;
@@ -97,13 +133,13 @@ textarea {
 .btn-ghost {
   background: transparent;
   color: var(--color-accent);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
 }
 
 .card {
   background: var(--color-bg-card);
   border-radius: var(--radius);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   box-shadow: var(--shadow);
 }
 
@@ -124,8 +160,10 @@ textarea {
 .field textarea {
   padding: 0.65rem 0.85rem;
   border-radius: 10px;
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   background: #fff;
+  /* 1.4.12 Text spacing — respect user/agent spacing without clipping */
+  min-height: 44px;
 }
 
 .field textarea {
@@ -147,12 +185,38 @@ textarea {
 
 .grid-menu {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
   gap: 1.25rem;
+}
+
+/* AAA visual presentation (1.4.8): paragraph separation in long-form content */
+.reading-flow p + p {
+  margin-top: 2em;
 }
 
 @media (max-width: 640px) {
   .shell {
     width: calc(100% - 1.5rem);
   }
+
+  .cart-line-item {
+    grid-template-columns: 1fr !important;
+    justify-items: start;
+  }
+}
+
+.nutrition-footnote {
+  margin: 0;
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+/* 2.5.5 Target Size — footer navigation links */
+footer[aria-label="Site footer"] nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.15rem 0.35rem;
 }

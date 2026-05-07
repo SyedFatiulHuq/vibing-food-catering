@@ -47,7 +47,7 @@ export function NutritionTable({ n }: { n: NutritionFacts }) {
           ))}
         </tbody>
       </table>
-      <p style={{ margin: 0, padding: "0.65rem 1rem", fontSize: "0.8rem", color: "var(--color-muted)" }}>
+      <p className="nutrition-footnote">
         Percent daily values are estimates for planning and may vary by preparation.
       </p>
     </div>

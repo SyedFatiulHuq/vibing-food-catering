@@ -5,16 +5,11 @@ import {
   readableDate,
   weekdayFromIso,
 } from "../lib/dates";
-import { getMenuForWeekday } from "../data/menu";
+import { useDocumentTitle } from "../lib/useDocumentTitle";
+import { getMenuForWeekday, MENU_CATEGORY_LABEL } from "../data/menu";
 import type { MenuCategory, MenuItem } from "../types";
 
 const categoryOrder: MenuCategory[] = ["protein", "vegetarian", "sides"];
-
-const categoryLabel: Record<MenuCategory, string> = {
-  protein: "Protein",
-  vegetarian: "Vegetarian",
-  sides: "Sides",
-};
 
 function groupByCategory(items: MenuItem[]): Record<MenuCategory, MenuItem[]> {
   const empty: Record<MenuCategory, MenuItem[]> = {
@@ -29,6 +24,7 @@ function groupByCategory(items: MenuItem[]): Record<MenuCategory, MenuItem[]> {
 }
 
 export function MenuPage() {
+  useDocumentTitle("Menu");
   const {
     cateringDateIso,
     setCateringDateIso,
@@ -45,7 +41,7 @@ export function MenuPage() {
 
   return (
     <div className="shell">
-      <header style={{ marginBottom: "2rem" }}>
+      <div className="page-intro" style={{ marginBottom: "2rem" }}>
         <h1 className="display" style={{ fontSize: "2.25rem", margin: "0 0 0.5rem" }}>
           Menu for your event date
         </h1>
@@ -55,7 +51,7 @@ export function MenuPage() {
           menu — <strong>5 proteins</strong>, <strong>3 vegetarian</strong>, and{" "}
           <strong>2 sides</strong>.
         </p>
-      </header>
+      </div>
 
       <div
         className="card"
@@ -74,6 +70,7 @@ export function MenuPage() {
             id="catering-date"
             value={cateringDateIso}
             onChange={(e) => setCateringDateIso(e.target.value)}
+            autoComplete="off"
           >
             {listSelectableDates().map((iso) => (
               <option key={iso} value={iso}>
@@ -91,6 +88,8 @@ export function MenuPage() {
             max={maxGuests}
             value={guestCount}
             onChange={(e) => setGuestCount(Number(e.target.value))}
+            autoComplete="off"
+            inputMode="numeric"
           />
         </div>
         <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--color-muted)" }}>
@@ -102,7 +101,7 @@ export function MenuPage() {
       {categoryOrder.map((cat) => (
         <section key={cat} style={{ marginBottom: "2.5rem" }}>
           <h2 className="display" style={{ fontSize: "1.75rem", marginBottom: "1rem" }}>
-            {categoryLabel[cat]}
+            {MENU_CATEGORY_LABEL[cat]}
           </h2>
           <div className="grid-menu">
             {grouped[cat].map((item) => (
@@ -117,7 +116,7 @@ export function MenuPage() {
                     loading="lazy"
                   />
                   <div style={{ padding: "1rem" }}>
-                    <span className="badge">{categoryLabel[item.category]}</span>
+                    <span className="badge">{MENU_CATEGORY_LABEL[item.category]}</span>
                     <h3 style={{ margin: "0.5rem 0 0.25rem", fontSize: "1.15rem" }}>{item.name}</h3>
                     <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--color-muted)" }}>
                       {item.portionNote}
@@ -135,10 +134,14 @@ export function MenuPage() {
                     style={{ flex: 1 }}
                     onClick={() => addLine(item.id, 1)}
                   >
-                    Add to cart
+                    Add to cart<span className="visually-hidden">: {item.name}</span>
                   </button>
                   <Link to={`/item/${item.id}`} className="btn btn-ghost">
                     Details
+                    <span className="visually-hidden">
+                      {" "}
+                      — {item.name}, full recipe and nutrition
+                    </span>
                   </Link>
                 </div>
               </article>

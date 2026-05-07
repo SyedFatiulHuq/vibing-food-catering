@@ -2,10 +2,12 @@ import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useOrders } from "../context/OrdersContext";
+import { useDocumentTitle } from "../lib/useDocumentTitle";
 import type { CheckoutPayload } from "../types";
 import { readableDate } from "../lib/dates";
 
 export function CheckoutPage() {
+  useDocumentTitle("Checkout");
   const navigate = useNavigate();
   const { placeOrder } = useOrders();
   const {
@@ -89,7 +91,7 @@ export function CheckoutPage() {
           style={{
             display: "grid",
             gap: "2rem",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))",
             alignItems: "start",
           }}
         >
@@ -171,25 +173,40 @@ export function CheckoutPage() {
             {paymentMethod === "card" && (
               <>
                 <div className="field">
-                  <label htmlFor="last4">Card last four digits</label>
+                  <label htmlFor="last4">
+                    Card last four digits <span aria-hidden="true">(digits only)</span>
+                  </label>
                   <input
                     id="last4"
                     inputMode="numeric"
                     maxLength={4}
+                    autoComplete="off"
+                    aria-describedby="last4-hint"
                     placeholder="4242"
                     value={cardLastFour}
                     onChange={(e) =>
                       setCardLastFour(e.target.value.replace(/\D/g, "").slice(0, 4))
                     }
                   />
+                  <span id="last4-hint" style={{ fontSize: "0.8rem", color: "var(--color-muted)" }}>
+                    Enter exactly four numeric digits as a checkout demo.
+                  </span>
                 </div>
                 <div className="field">
-                  <label htmlFor="zip">Billing ZIP (optional)</label>
+                  <label htmlFor="zip">
+                    Billing <abbr title="United States Postal Service postal code">ZIP</abbr> (optional)
+                  </label>
                   <input
                     id="zip"
                     value={billingZip}
+                    autoComplete="postal-code"
+                    aria-describedby="zip-hint"
+                    inputMode="numeric"
                     onChange={(e) => setBillingZip(e.target.value)}
                   />
+                  <span id="zip-hint" style={{ fontSize: "0.8rem", color: "var(--color-muted)" }}>
+                    Helps match the card billing address — optional for demo.
+                  </span>
                 </div>
               </>
             )}
@@ -203,10 +220,11 @@ export function CheckoutPage() {
                 id="notes"
                 value={specialInstructions}
                 onChange={(e) => setSpecialInstructions(e.target.value)}
+                autoComplete="off"
               />
             </div>
             {error && (
-              <p style={{ color: "#9a3412", fontWeight: 600 }} role="alert">
+              <p style={{ color: "#7c2d12", fontWeight: 600 }} role="alert" aria-live="assertive">
                 {error}
               </p>
             )}

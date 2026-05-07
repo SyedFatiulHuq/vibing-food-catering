@@ -4,6 +4,13 @@ import { useCart } from "../context/CartContext";
 const navLinkStyle = ({ isActive }: { isActive: boolean }) => ({
   fontWeight: isActive ? 700 : 500,
   color: isActive ? "var(--color-accent)" : "var(--color-ink)",
+  textDecoration: isActive ? "underline" : "none",
+  textUnderlineOffset: "0.18em",
+  display: "inline-flex",
+  alignItems: "center",
+  minHeight: "44px",
+  padding: "0.25rem 0.55rem",
+  borderRadius: "8px",
 });
 
 export function Layout() {
@@ -12,9 +19,22 @@ export function Layout() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <a
+        href="#main-content"
+        className="skip-link"
+        onClick={(e) => {
+          const mainEl = document.getElementById("main-content");
+          if (!mainEl) return;
+          e.preventDefault();
+          mainEl.focus();
+          mainEl.scrollIntoView({ block: "start" });
+        }}
+      >
+        Skip to main content
+      </a>
       <header
         style={{
-          borderBottom: "1px solid var(--color-border)",
+          borderBottom: "2px solid var(--color-border)",
           background: "rgba(255, 253, 248, 0.92)",
           backdropFilter: "blur(8px)",
           position: "sticky",
@@ -48,14 +68,7 @@ export function Layout() {
               Homemade catering · pickup only
             </span>
           </Link>
-          <nav
-            style={{
-              display: "flex",
-              gap: "1.25rem",
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
-          >
+          <nav aria-label="Primary" style={{ display: "flex", gap: "0.65rem", flexWrap: "wrap", alignItems: "center" }}>
             <NavLink to="/menu" style={navLinkStyle}>
               Menu
             </NavLink>
@@ -71,22 +84,53 @@ export function Layout() {
           </nav>
         </div>
       </header>
-      <main style={{ flex: 1, padding: "2rem 0 3rem" }}>
+      <main id="main-content" tabIndex={-1} style={{ flex: 1, padding: "2rem 0 3rem" }}>
         <Outlet />
       </main>
       <footer
+        role="contentinfo"
+        aria-label="Site footer"
         style={{
-          borderTop: "1px solid var(--color-border)",
+          borderTop: "2px solid var(--color-border)",
           padding: "1.5rem 0",
           color: "var(--color-muted)",
           fontSize: "0.9rem",
         }}
       >
         <div className="shell">
-          <p style={{ margin: 0 }}>
+          <p style={{ margin: "0 0 1rem" }}>
             © {new Date().getFullYear()} Vibing Kitchen. Crafted for gatherings,
             served with care.
           </p>
+          {/* 2.4.5 Multiple Ways — auxiliary navigation */}
+          <nav aria-label="Site">
+            <ul
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "0.75rem 1.5rem",
+                listStyle: "none",
+                margin: 0,
+                padding: 0,
+              }}
+            >
+              <li style={{ margin: 0 }}>
+                <Link to="/">Home</Link>
+              </li>
+              <li style={{ margin: 0 }}>
+                <Link to="/menu">Full menu</Link>
+              </li>
+              <li style={{ margin: 0 }}>
+                <Link to="/about">About</Link>
+              </li>
+              <li style={{ margin: 0 }}>
+                <Link to="/contact">Contact</Link>
+              </li>
+              <li style={{ margin: 0 }}>
+                <Link to="/cart">Cart</Link>
+              </li>
+            </ul>
+          </nav>
         </div>
       </footer>
     </div>

@@ -1,8 +1,10 @@
 import { FormEvent, useState } from "react";
+import { useDocumentTitle } from "../lib/useDocumentTitle";
 
 const CONTACT_STORAGE = "vibing-contact-messages";
 
 export function ContactPage() {
+  useDocumentTitle("Contact");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [topic, setTopic] = useState("general");
@@ -33,7 +35,7 @@ export function ContactPage() {
   };
 
   return (
-    <div className="shell" style={{ maxWidth: "720px" }}>
+    <div className="shell reading-flow" style={{ maxWidth: "720px" }}>
       <h1 className="display" style={{ fontSize: "2.25rem" }}>
         Contact
       </h1>
@@ -59,12 +61,14 @@ export function ContactPage() {
         <div>
           <h2 className="display" style={{ marginTop: 0, fontSize: "1.25rem" }}>Social</h2>
           <p style={{ margin: 0 }}>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
               Instagram
+              <span className="visually-hidden"> (opens in a new tab)</span>
             </a>
             {" · "}
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
               Facebook
+              <span className="visually-hidden"> (opens in a new tab)</span>
             </a>
           </p>
         </div>
@@ -73,7 +77,7 @@ export function ContactPage() {
       <h2 className="display" style={{ fontSize: "1.5rem" }}>Send a message</h2>
 
       {sent && (
-        <p style={{ color: "var(--color-accent)", fontWeight: 600 }} role="status">
+        <p style={{ color: "var(--color-accent)", fontWeight: 600 }} role="status" aria-live="polite">
           Thanks — your note was saved locally for follow-up.
         </p>
       )}
@@ -85,6 +89,7 @@ export function ContactPage() {
             id="c-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            autoComplete="name"
             required
           />
         </div>
@@ -95,6 +100,7 @@ export function ContactPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
           />
         </div>
@@ -104,6 +110,7 @@ export function ContactPage() {
             id="c-topic"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
+            autoComplete="off"
           >
             <option value="general">General question</option>
             <option value="menu">Menu &amp; dietary</option>
@@ -116,6 +123,7 @@ export function ContactPage() {
             id="c-msg"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            autoComplete="off"
             required
           />
         </div>

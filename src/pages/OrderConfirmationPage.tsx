@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useMemo } from "react";
 import { useOrders } from "../context/OrdersContext";
+import { useDocumentTitle } from "../lib/useDocumentTitle";
 import { readableDate } from "../lib/dates";
 
 export function OrderConfirmationPage() {
@@ -11,6 +12,8 @@ export function OrderConfirmationPage() {
     () => orders.find((o) => o.id === orderId),
     [orders, orderId],
   );
+
+  useDocumentTitle(order ? `Invoice ${order.id}` : "Order");
 
   if (!order) {
     return (
@@ -118,24 +121,44 @@ export function OrderConfirmationPage() {
           </section>
         )}
 
-        <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem" }}>
-          <thead>
-            <tr style={{ borderBottom: "2px solid var(--color-ink)" }}>
-              <th style={{ textAlign: "left", padding: "0.5rem 0" }}>Item</th>
-              <th style={{ textAlign: "right", padding: "0.5rem 0" }}>Qty</th>
-              <th style={{ textAlign: "right", padding: "0.5rem 0" }}>Line</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.lines.map((l) => (
-              <tr key={l.item.id} style={{ borderBottom: "1px solid var(--color-border)" }}>
-                <td style={{ padding: "0.6rem 0" }}>{l.item.name}</td>
-                <td style={{ textAlign: "right" }}>{l.quantity}</td>
-                <td style={{ textAlign: "right" }}>${l.lineTotal.toFixed(2)}</td>
+        <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+          <table
+            style={{
+              width: "100%",
+              minWidth: "min(100%, 28rem)",
+              borderCollapse: "collapse",
+              marginTop: "1rem",
+            }}
+          >
+            <caption id="order-lines-caption" className="visually-hidden" style={{ captionSide: "top" }}>
+              Line items included in invoice {order.id}
+            </caption>
+            <thead>
+              <tr style={{ borderBottom: "2px solid var(--color-ink)" }}>
+                <th scope="col" style={{ textAlign: "left", padding: "0.5rem 0.5rem 0.5rem 0" }}>
+                  Item
+                </th>
+                <th scope="col" style={{ textAlign: "right", padding: "0.5rem" }}>
+                  Qty
+                </th>
+                <th scope="col" style={{ textAlign: "right", padding: "0.5rem 0 0.5rem 0.5rem" }}>
+                  Line
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {order.lines.map((l) => (
+                <tr key={l.item.id} style={{ borderBottom: "1px solid var(--color-border)" }}>
+                  <td style={{ padding: "0.75rem 0.5rem 0.75rem 0" }}>{l.item.name}</td>
+                  <td style={{ textAlign: "right", padding: "0.75rem 0.5rem" }}>{l.quantity}</td>
+                  <td style={{ textAlign: "right", padding: "0.75rem 0 0.75rem 0.5rem" }}>
+                    ${l.lineTotal.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         <div style={{ marginTop: "1rem", textAlign: "right" }}>
           <div>Subtotal: ${order.subtotal.toFixed(2)}</div>

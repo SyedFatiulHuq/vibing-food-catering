@@ -1,7 +1,8 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { NutritionTable } from "../components/NutritionTable";
-import { getItemById } from "../data/menu";
+import { getItemById, MENU_CATEGORY_LABEL } from "../data/menu";
 import { useCart } from "../context/CartContext";
+import { useDocumentTitle } from "../lib/useDocumentTitle";
 
 export function ItemDetailPage() {
   const { itemId } = useParams<{ itemId: string }>();
@@ -10,9 +11,12 @@ export function ItemDetailPage() {
 
   const item = itemId ? getItemById(itemId) : undefined;
 
+  useDocumentTitle(item?.name ?? "Menu item not found");
+
   if (!item) {
     return (
       <div className="shell">
+        <h1 className="display">Dish not found</h1>
         <p>We couldn&apos;t find that dish.</p>
         <button type="button" className="btn btn-ghost" onClick={() => navigate("/menu")}>
           Back to menu
@@ -21,35 +25,47 @@ export function ItemDetailPage() {
     );
   }
 
+  const categoryName = MENU_CATEGORY_LABEL[item.category];
+
   return (
-    <div className="shell">
-      <p style={{ marginTop: 0 }}>
-        <Link to="/menu">← Menu</Link>
-      </p>
+    <div className="shell reading-flow">
+      <nav aria-label="Breadcrumb">
+        <p style={{ marginTop: 0 }}>
+          <Link to="/menu">
+            <span aria-hidden="true">← </span>
+            Back to menu
+          </Link>
+          <span style={{ margin: "0 0.5rem", color: "var(--color-muted)" }} aria-hidden="true">
+            /
+          </span>
+          <span aria-current="page">{item.name}</span>
+        </p>
+      </nav>
       <div
         style={{
           display: "grid",
           gap: "2rem",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))",
           alignItems: "start",
         }}
       >
         <div>
+          {/* Photo is illustrative; dish name appears in heading (1.1.1). */}
           <img
             src={item.imageUrl}
-            alt={item.name}
+            alt=""
             width={640}
             height={480}
             style={{
               width: "100%",
               borderRadius: "var(--radius)",
-              border: "1px solid var(--color-border)",
+              border: "2px solid var(--color-border)",
               boxShadow: "var(--shadow)",
             }}
           />
         </div>
         <div>
-          <span className="badge">{item.category}</span>
+          <p className="badge">{categoryName}</p>
           <h1 className="display" style={{ fontSize: "2rem", margin: "0.5rem 0" }}>
             {item.name}
           </h1>
@@ -72,6 +88,7 @@ export function ItemDetailPage() {
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginTop: "1rem" }}>
             <button type="button" className="btn btn-primary" onClick={() => addLine(item.id, 1)}>
               Add to cart
+              <span className="visually-hidden">: {item.name}</span>
             </button>
             <Link to="/cart" className="btn btn-ghost">
               View cart
@@ -79,7 +96,10 @@ export function ItemDetailPage() {
           </div>
         </div>
       </div>
-      <section style={{ marginTop: "2.5rem", maxWidth: "520px" }}>
+      <section
+        aria-label={`Nutrition facts for ${item.name}`}
+        style={{ marginTop: "2.5rem", maxWidth: "min(520px, 100%)" }}
+      >
         <NutritionTable n={item.nutrition} />
       </section>
     </div>

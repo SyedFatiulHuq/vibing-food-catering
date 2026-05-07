@@ -1,4 +1,4 @@
-import type { MenuItem, Weekday } from "../types";
+import type { MenuItem, MenuCategory, Weekday } from "../types";
 
 function nf(partial: Partial<MenuItem["nutrition"]> & Pick<MenuItem["nutrition"], "calories">): MenuItem["nutrition"] {
   return {
@@ -504,7 +504,14 @@ function makeSide(id: string, name: string, price: number): MenuItem {
   };
 }
 
-export const menusByWeekday: Record<Weekday, MenuItem[]> = buildMenus();
+/** Human-readable category names (semantics / screen readers) */
+export const MENU_CATEGORY_LABEL: Record<MenuCategory, string> = {
+  protein: "Protein",
+  vegetarian: "Vegetarian",
+  sides: "Sides",
+};
+
+const menusByWeekday: Record<Weekday, MenuItem[]> = buildMenus();
 
 const byId = new Map<string, MenuItem>();
 for (const items of Object.values(menusByWeekday)) {

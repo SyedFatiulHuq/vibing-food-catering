@@ -1,6 +1,9 @@
+import { useDocumentTitle } from "../lib/useDocumentTitle";
+
 export function AboutPage() {
+  useDocumentTitle("About");
   return (
-    <div className="shell" style={{ maxWidth: "720px" }}>
+    <div className="shell reading-flow" style={{ maxWidth: "720px" }}>
       <h1 className="display" style={{ fontSize: "2.25rem" }}>
         About Vibing Kitchen
       </h1>

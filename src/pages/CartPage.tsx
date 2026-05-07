@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { getItemById } from "../data/menu";
+import { useDocumentTitle } from "../lib/useDocumentTitle";
 import { readableDate } from "../lib/dates";
 
 export function CartPage() {
+  useDocumentTitle("Cart");
   const {
     lines,
     setLineQuantity,
@@ -39,11 +41,13 @@ export function CartPage() {
         style={{
           padding: "1rem",
           margin: "1.5rem 0",
-          maxWidth: "320px",
+          maxWidth: "min(380px, 100%)",
         }}
       >
         <div className="field">
-          <label htmlFor="cart-guests">Guest count ({minGuests}–{maxGuests})</label>
+          <label htmlFor="cart-guests">
+            Guest count ({minGuests}–{maxGuests})
+          </label>
           <input
             id="cart-guests"
             type="number"
@@ -51,7 +55,13 @@ export function CartPage() {
             max={maxGuests}
             value={guestCount}
             onChange={(e) => setGuestCount(Number(e.target.value))}
+            autoComplete="off"
+            inputMode="numeric"
+            aria-describedby="guest-count-hint"
           />
+          <span id="guest-count-hint" style={{ fontSize: "0.8rem", color: "var(--color-muted)" }}>
+            Used with each line item&apos;s per-guest price.
+          </span>
         </div>
       </div>
 
@@ -63,25 +73,32 @@ export function CartPage() {
             {priced.map((l) => (
               <li
                 key={l.itemId}
-                className="card"
+                className="card cart-line-item"
                 style={{
                   padding: "1rem",
                   marginBottom: "1rem",
                   display: "grid",
                   gap: "1rem",
-                  gridTemplateColumns: "100px 1fr auto",
+                  gridTemplateColumns: "clamp(72px, 18vw, 100px) 1fr auto",
                   alignItems: "center",
                 }}
               >
                 <img
                   src={l.item.imageUrl}
-                  alt={l.item.name}
+                  alt=""
                   width={100}
                   height={75}
-                  style={{ borderRadius: "8px", objectFit: "cover", width: 100, height: 75 }}
+                  style={{
+                    borderRadius: "8px",
+                    objectFit: "cover",
+                    width: "100%",
+                    maxWidth: 100,
+                  }}
                 />
                 <div>
-                  <strong>{l.item.name}</strong>
+                  <strong>
+                    <Link to={`/item/${l.item.id}`}>{l.item.name}</Link>
+                  </strong>
                   <p style={{ margin: "0.25rem 0 0", fontSize: "0.9rem", color: "var(--color-muted)" }}>
                     ${l.item.pricePerPerson.toFixed(2)} × {guestCount} guests × {l.quantity}{" "}
                     unit{l.quantity !== 1 ? "s" : ""}
@@ -91,24 +108,31 @@ export function CartPage() {
                     {(l.item.pricePerPerson * guestCount * l.quantity).toFixed(2)}
                   </p>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", alignItems: "stretch" }}>
-                  <label style={{ fontSize: "0.8rem", color: "var(--color-muted)" }}>Qty</label>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem", alignItems: "stretch" }}>
+                  <label htmlFor={`qty-${l.itemId}`}>Quantity ({l.item.name})</label>
                   <input
+                    id={`qty-${l.itemId}`}
                     type="number"
                     min={1}
                     max={99}
+                    inputMode="numeric"
+                    aria-describedby={`qty-help-${l.itemId}`}
                     value={l.quantity}
                     onChange={(e) =>
                       setLineQuantity(l.itemId, Number(e.target.value))
                     }
-                    style={{ width: "4rem", padding: "0.35rem" }}
+                    style={{ width: "4.75rem", minHeight: "44px", padding: "0.35rem" }}
                   />
+                  <span id={`qty-help-${l.itemId}`} className="visually-hidden">
+                    Line quantity for cart line ({l.item.name}). Minimum 1, maximum 99.
+                  </span>
                   <button
                     type="button"
                     className="btn btn-ghost"
                     onClick={() => removeLine(l.itemId)}
                   >
                     Remove
+                    <span className="visually-hidden">{` (${l.item.name})`}</span>
                   </button>
                 </div>
               </li>
