@@ -75,7 +75,7 @@ export function CartPage() {
               >
                 <img
                   src={l.item.imageUrl}
-                  alt={l.item.name}
+                  alt=""
                   width={100}
                   height={75}
                   style={{ borderRadius: "8px", objectFit: "cover", width: 100, height: 75 }}
@@ -92,8 +92,11 @@ export function CartPage() {
                   </p>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", alignItems: "stretch" }}>
-                  <label style={{ fontSize: "0.8rem", color: "var(--color-muted)" }}>Qty</label>
+                  <label htmlFor={`cart-qty-${l.itemId}`} style={{ fontSize: "0.8rem", color: "var(--color-muted)" }}>
+                    Qty
+                  </label>
                   <input
+                    id={`cart-qty-${l.itemId}`}
                     type="number"
                     min={1}
                     max={99}

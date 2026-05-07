@@ -119,11 +119,20 @@ export function OrderConfirmationPage() {
         )}
 
         <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem" }}>
+          <caption className="visually-hidden">
+            Line items for this order
+          </caption>
           <thead>
             <tr style={{ borderBottom: "2px solid var(--color-ink)" }}>
-              <th style={{ textAlign: "left", padding: "0.5rem 0" }}>Item</th>
-              <th style={{ textAlign: "right", padding: "0.5rem 0" }}>Qty</th>
-              <th style={{ textAlign: "right", padding: "0.5rem 0" }}>Line</th>
+              <th scope="col" style={{ textAlign: "left", padding: "0.5rem 0" }}>
+                Item
+              </th>
+              <th scope="col" style={{ textAlign: "right", padding: "0.5rem 0" }}>
+                Qty
+              </th>
+              <th scope="col" style={{ textAlign: "right", padding: "0.5rem 0" }}>
+                Line
+              </th>
             </tr>
           </thead>
           <tbody>

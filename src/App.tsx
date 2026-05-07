@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import { OrdersProvider } from "./context/OrdersContext";
+import { DocumentTitle } from "./components/DocumentTitle";
 import { Layout } from "./components/Layout";
 import { HomePage } from "./pages/HomePage";
 import { MenuPage } from "./pages/MenuPage";
@@ -14,6 +15,7 @@ import { ContactPage } from "./pages/ContactPage";
 export default function App() {
   return (
     <BrowserRouter basename="/vibing-food-catering/">
+      <DocumentTitle />
       <CartProvider>
         <OrdersProvider>
           <Routes>

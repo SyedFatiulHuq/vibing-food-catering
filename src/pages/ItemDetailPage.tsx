@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { NutritionTable } from "../components/NutritionTable";
 import { getItemById } from "../data/menu";
+import { MENU_CATEGORY_LABEL } from "../lib/menuCategory";
 import { useCart } from "../context/CartContext";
 
 export function ItemDetailPage() {
@@ -13,6 +14,7 @@ export function ItemDetailPage() {
   if (!item) {
     return (
       <div className="shell">
+        <h1 className="display">Dish not found</h1>
         <p>We couldn&apos;t find that dish.</p>
         <button type="button" className="btn btn-ghost" onClick={() => navigate("/menu")}>
           Back to menu
@@ -24,7 +26,7 @@ export function ItemDetailPage() {
   return (
     <div className="shell">
       <p style={{ marginTop: 0 }}>
-        <Link to="/menu">← Menu</Link>
+        <Link to="/menu">Back to menu</Link>
       </p>
       <div
         style={{
@@ -49,7 +51,7 @@ export function ItemDetailPage() {
           />
         </div>
         <div>
-          <span className="badge">{item.category}</span>
+          <span className="badge">{MENU_CATEGORY_LABEL[item.category]}</span>
           <h1 className="display" style={{ fontSize: "2rem", margin: "0.5rem 0" }}>
             {item.name}
           </h1>

@@ -6,15 +6,10 @@ import {
   weekdayFromIso,
 } from "../lib/dates";
 import { getMenuForWeekday } from "../data/menu";
+import { MENU_CATEGORY_LABEL } from "../lib/menuCategory";
 import type { MenuCategory, MenuItem } from "../types";
 
 const categoryOrder: MenuCategory[] = ["protein", "vegetarian", "sides"];
-
-const categoryLabel: Record<MenuCategory, string> = {
-  protein: "Protein",
-  vegetarian: "Vegetarian",
-  sides: "Sides",
-};
 
 function groupByCategory(items: MenuItem[]): Record<MenuCategory, MenuItem[]> {
   const empty: Record<MenuCategory, MenuItem[]> = {
@@ -45,8 +40,8 @@ export function MenuPage() {
 
   return (
     <div className="shell">
-      <header style={{ marginBottom: "2rem" }}>
-        <h1 className="display" style={{ fontSize: "2.25rem", margin: "0 0 0.5rem" }}>
+      <section aria-labelledby="menu-page-title" style={{ marginBottom: "2rem" }}>
+        <h1 id="menu-page-title" className="display" style={{ fontSize: "2.25rem", margin: "0 0 0.5rem" }}>
           Menu for your event date
         </h1>
         <p style={{ color: "var(--color-muted)", margin: 0, maxWidth: "62ch" }}>
@@ -55,7 +50,7 @@ export function MenuPage() {
           menu — <strong>5 proteins</strong>, <strong>3 vegetarian</strong>, and{" "}
           <strong>2 sides</strong>.
         </p>
-      </header>
+      </section>
 
       <div
         className="card"
@@ -91,9 +86,10 @@ export function MenuPage() {
             max={maxGuests}
             value={guestCount}
             onChange={(e) => setGuestCount(Number(e.target.value))}
+            aria-describedby="menu-guest-hint"
           />
         </div>
-        <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--color-muted)" }}>
+        <p id="menu-guest-hint" style={{ margin: 0, fontSize: "0.9rem", color: "var(--color-muted)" }}>
           Menu day: <strong style={{ color: "var(--color-ink)" }}>{readableDate(cateringDateIso)}</strong>{" "}
           · Cart pricing uses your guest count for per-guest items.
         </p>
@@ -102,7 +98,7 @@ export function MenuPage() {
       {categoryOrder.map((cat) => (
         <section key={cat} style={{ marginBottom: "2.5rem" }}>
           <h2 className="display" style={{ fontSize: "1.75rem", marginBottom: "1rem" }}>
-            {categoryLabel[cat]}
+            {MENU_CATEGORY_LABEL[cat]}
           </h2>
           <div className="grid-menu">
             {grouped[cat].map((item) => (
@@ -110,14 +106,14 @@ export function MenuPage() {
                 <Link to={`/item/${item.id}`} style={{ textDecoration: "none", color: "inherit" }}>
                   <img
                     src={item.imageUrl}
-                    alt={item.name}
+                    alt=""
                     width={640}
                     height={480}
                     style={{ aspectRatio: "4/3", objectFit: "cover", width: "100%" }}
                     loading="lazy"
                   />
                   <div style={{ padding: "1rem" }}>
-                    <span className="badge">{categoryLabel[item.category]}</span>
+                    <span className="badge">{MENU_CATEGORY_LABEL[item.category]}</span>
                     <h3 style={{ margin: "0.5rem 0 0.25rem", fontSize: "1.15rem" }}>{item.name}</h3>
                     <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--color-muted)" }}>
                       {item.portionNote}
@@ -137,7 +133,7 @@ export function MenuPage() {
                   >
                     Add to cart
                   </button>
-                  <Link to={`/item/${item.id}`} className="btn btn-ghost">
+                  <Link to={`/item/${item.id}`} className="btn btn-ghost" aria-label={`${item.name}, full details`}>
                     Details
                   </Link>
                 </div>

@@ -12,6 +12,9 @@ export function Layout() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <header
         style={{
           borderBottom: "1px solid var(--color-border)",
@@ -33,7 +36,11 @@ export function Layout() {
             flexWrap: "wrap",
           }}
         >
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Link
+            to="/"
+            style={{ textDecoration: "none", color: "inherit" }}
+            aria-label="Vibing Kitchen, home"
+          >
             <span className="display" style={{ fontSize: "1.5rem" }}>
               Vibing Kitchen
             </span>
@@ -49,6 +56,7 @@ export function Layout() {
             </span>
           </Link>
           <nav
+            aria-label="Primary"
             style={{
               display: "flex",
               gap: "1.25rem",
@@ -56,22 +64,28 @@ export function Layout() {
               alignItems: "center",
             }}
           >
-            <NavLink to="/menu" style={navLinkStyle}>
+            <NavLink to="/menu" className="nav-bar__link" style={navLinkStyle}>
               Menu
             </NavLink>
-            <NavLink to="/cart" style={navLinkStyle}>
-              Cart{count > 0 ? ` (${count})` : ""}
+            <NavLink to="/cart" className="nav-bar__link" style={navLinkStyle}>
+              Cart
+              {count > 0 ? (
+                <span aria-hidden="true">{` (${count})`}</span>
+              ) : null}
+              {count > 0 ? (
+                <span className="visually-hidden">{`${count} items in cart`}</span>
+              ) : null}
             </NavLink>
-            <NavLink to="/about" style={navLinkStyle}>
+            <NavLink to="/about" className="nav-bar__link" style={navLinkStyle}>
               About
             </NavLink>
-            <NavLink to="/contact" style={navLinkStyle}>
+            <NavLink to="/contact" className="nav-bar__link" style={navLinkStyle}>
               Contact
             </NavLink>
           </nav>
         </div>
       </header>
-      <main style={{ flex: 1, padding: "2rem 0 3rem" }}>
+      <main id="main-content" tabIndex={-1} style={{ flex: 1, padding: "2rem 0 3rem" }}>
         <Outlet />
       </main>
       <footer

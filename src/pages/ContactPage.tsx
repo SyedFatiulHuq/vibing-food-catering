@@ -59,11 +59,21 @@ export function ContactPage() {
         <div>
           <h2 className="display" style={{ marginTop: 0, fontSize: "1.25rem" }}>Social</h2>
           <p style={{ margin: 0 }}>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram (opens in new tab)"
+            >
               Instagram
             </a>
             {" · "}
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook (opens in new tab)"
+            >
               Facebook
             </a>
           </p>
@@ -73,7 +83,7 @@ export function ContactPage() {
       <h2 className="display" style={{ fontSize: "1.5rem" }}>Send a message</h2>
 
       {sent && (
-        <p style={{ color: "var(--color-accent)", fontWeight: 600 }} role="status">
+        <p role="status" aria-live="polite" style={{ color: "var(--color-accent)", fontWeight: 600 }}>
           Thanks — your note was saved locally for follow-up.
         </p>
       )}
@@ -83,6 +93,8 @@ export function ContactPage() {
           <label htmlFor="c-name">Name</label>
           <input
             id="c-name"
+            name="name"
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -92,7 +104,9 @@ export function ContactPage() {
           <label htmlFor="c-email">Email</label>
           <input
             id="c-email"
+            name="email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

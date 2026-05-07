@@ -80,9 +80,10 @@ export function CheckoutPage() {
       </p>
 
       {lines.length === 0 ? (
-        <p>
-          Nothing to check out. <Link to="/menu">Return to menu</Link>.
-        </p>
+          <p>
+            Nothing to check out.{" "}
+            <Link to="/menu">Return to menu</Link>.
+          </p>
       ) : (
         <form
           onSubmit={handleSubmit}
@@ -102,10 +103,10 @@ export function CheckoutPage() {
                 value={pickupWindow}
                 onChange={(e) => setPickupWindow(e.target.value)}
               >
-                <option>12:00 PM – 2:00 PM</option>
-                <option>2:00 PM – 4:00 PM</option>
-                <option>4:00 PM – 6:00 PM</option>
-                <option>6:00 PM – 8:00 PM</option>
+                <option value="12:00 PM – 2:00 PM">12:00 PM – 2:00 PM</option>
+                <option value="2:00 PM – 4:00 PM">2:00 PM – 4:00 PM</option>
+                <option value="4:00 PM – 6:00 PM">4:00 PM – 6:00 PM</option>
+                <option value="6:00 PM – 8:00 PM">6:00 PM – 8:00 PM</option>
               </select>
             </div>
             <p style={{ fontSize: "0.9rem", color: "var(--color-muted)" }}>
@@ -177,6 +178,7 @@ export function CheckoutPage() {
                     inputMode="numeric"
                     maxLength={4}
                     placeholder="4242"
+                    autoComplete="off"
                     value={cardLastFour}
                     onChange={(e) =>
                       setCardLastFour(e.target.value.replace(/\D/g, "").slice(0, 4))
@@ -187,6 +189,7 @@ export function CheckoutPage() {
                   <label htmlFor="zip">Billing ZIP (optional)</label>
                   <input
                     id="zip"
+                    autoComplete="postal-code"
                     value={billingZip}
                     onChange={(e) => setBillingZip(e.target.value)}
                   />
@@ -206,7 +209,7 @@ export function CheckoutPage() {
               />
             </div>
             {error && (
-              <p style={{ color: "#9a3412", fontWeight: 600 }} role="alert">
+              <p className="form-error" role="alert" aria-live="assertive">
                 {error}
               </p>
             )}

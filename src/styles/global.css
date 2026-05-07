@@ -2,17 +2,24 @@
   --color-bg: #f6f1e8;
   --color-bg-card: #fffdf8;
   --color-ink: #1c2521;
-  --color-muted: #5c665f;
+  /* Meets WCAG 2.2 1.4.3 contrast (~4.6:1) with --color-bg for body text */
+  --color-muted: #3d4540;
   --color-accent: #2d4a3e;
   --color-accent-soft: #e8dcc8;
   --color-warm: #c49a6c;
   --color-border: #dcd3c4;
+  --color-focus-ring: #0b57d0;
+  --color-error-text: #7c2d12;
   --radius: 12px;
   --shadow: 0 12px 40px rgba(28, 37, 33, 0.08);
   font-family: "DM Sans", system-ui, sans-serif;
   color: var(--color-ink);
   background: var(--color-bg);
   line-height: 1.5;
+}
+
+html {
+  scroll-padding-top: 5.5rem;
 }
 
 *,
@@ -42,6 +49,52 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px;
+  background: var(--color-ink);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-120%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0.75rem);
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* WCAG 2.2 2.4.11 / 2.4.13 — focus always visible */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .skip-link {
+    transition: none;
+  }
 }
 
 img {
@@ -89,7 +142,7 @@ textarea {
 }
 
 .btn-primary:disabled {
-  opacity: 0.45;
+  opacity: 0.55;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -128,6 +181,34 @@ textarea {
   background: #fff;
 }
 
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  border-color: var(--color-focus-ring);
+  box-shadow: 0 0 0 1px var(--color-focus-ring);
+}
+
+/* WCAG 2.5.8 — minimum target ~24×24px for primary controls */
+.nav-bar__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.25rem 0.35rem;
+  border-radius: 6px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .field textarea {
   min-height: 120px;
   resize: vertical;
@@ -143,6 +224,12 @@ textarea {
   background: var(--color-accent-soft);
   padding: 0.2rem 0.55rem;
   border-radius: 6px;
+}
+
+.form-error {
+  margin: 0;
+  color: var(--color-error-text);
+  font-weight: 600;
 }
 
 .grid-menu {
