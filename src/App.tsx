@@ -13,7 +13,7 @@ import { OrderPage } from "./pages/OrderPage";
 export default function App() {
   return (
     <CartProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/vibing-food-catering">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/menu" element={<MenuPage />} />
