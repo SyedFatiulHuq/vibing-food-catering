@@ -1,0 +1,158 @@
+:root {
+  --color-bg: #f6f1e8;
+  --color-bg-card: #fffdf8;
+  --color-ink: #1c2521;
+  --color-muted: #5c665f;
+  --color-accent: #2d4a3e;
+  --color-accent-soft: #e8dcc8;
+  --color-warm: #c49a6c;
+  --color-border: #dcd3c4;
+  --radius: 12px;
+  --shadow: 0 12px 40px rgba(28, 37, 33, 0.08);
+  font-family: "DM Sans", system-ui, sans-serif;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  line-height: 1.5;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+.display {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.shell {
+  width: min(1120px, 100% - 2rem);
+  margin-inline: auto;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(45, 74, 62, 0.25);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
+}
+
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.grid-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .shell {
+    width: calc(100% - 1.5rem);
+  }
+}
