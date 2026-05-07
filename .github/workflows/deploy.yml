@@ -1,9 +1,9 @@
-name: Deploy Pre-Build No Mention to GitHub Pages
+name: Deploy Post-Build Single Listed Guidance to GitHub Pages
 
 on:
   push:
     branches:
-      - pre-build-no-mention  # change this to your deployment branch if different
+      - post-build-single-listed-guidance
 
 permissions:
   contents: read
