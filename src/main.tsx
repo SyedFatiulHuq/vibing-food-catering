@@ -11,7 +11,7 @@ if (!container) throw new Error("Root element not found");
 
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/vibing-food-catering">
       <App />
     </BrowserRouter>
   </StrictMode>,
