@@ -34,12 +34,15 @@ export function CartPage() {
         Pickup date: <strong>{readableDate(cateringDateIso)}</strong>
       </p>
 
-      <div
+      <section
         className="card"
+        aria-label="Guests for cart pricing"
         style={{
           padding: "1rem",
           margin: "1.5rem 0",
+          width: "100%",
           maxWidth: "320px",
+          minWidth: 0,
         }}
       >
         <div className="field">
@@ -53,7 +56,7 @@ export function CartPage() {
             onChange={(e) => setGuestCount(Number(e.target.value))}
           />
         </div>
-      </div>
+      </section>
 
       {priced.length === 0 ? (
         <p>Your cart is empty. <Link to="/menu">Browse the menu</Link>.</p>
@@ -63,24 +66,22 @@ export function CartPage() {
             {priced.map((l) => (
               <li
                 key={l.itemId}
-                className="card"
+                className="card cart-line"
                 style={{
                   padding: "1rem",
                   marginBottom: "1rem",
-                  display: "grid",
-                  gap: "1rem",
-                  gridTemplateColumns: "100px 1fr auto",
-                  alignItems: "center",
                 }}
               >
-                <img
-                  src={l.item.imageUrl}
-                  alt={l.item.name}
-                  width={100}
-                  height={75}
-                  style={{ borderRadius: "8px", objectFit: "cover", width: 100, height: 75 }}
-                />
-                <div>
+                <div className="cart-line__thumb">
+                  <img
+                    src={l.item.imageUrl}
+                    alt=""
+                    width={100}
+                    height={75}
+                    style={{ borderRadius: "8px", objectFit: "cover", width: 100, height: 75 }}
+                  />
+                </div>
+                <div className="cart-line__body">
                   <strong>{l.item.name}</strong>
                   <p style={{ margin: "0.25rem 0 0", fontSize: "0.9rem", color: "var(--color-muted)" }}>
                     ${l.item.pricePerPerson.toFixed(2)} × {guestCount} guests × {l.quantity}{" "}
@@ -91,22 +92,26 @@ export function CartPage() {
                     {(l.item.pricePerPerson * guestCount * l.quantity).toFixed(2)}
                   </p>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", alignItems: "stretch" }}>
-                  <label style={{ fontSize: "0.8rem", color: "var(--color-muted)" }}>Qty</label>
+                <div className="cart-line__controls">
+                  <label htmlFor={`cart-qty-${l.itemId}`}>
+                    Qty ({l.item.name})
+                  </label>
                   <input
+                    id={`cart-qty-${l.itemId}`}
                     type="number"
+                    className="cart-line__qty"
                     min={1}
                     max={99}
                     value={l.quantity}
                     onChange={(e) =>
                       setLineQuantity(l.itemId, Number(e.target.value))
                     }
-                    style={{ width: "4rem", padding: "0.35rem" }}
                   />
                   <button
                     type="button"
                     className="btn btn-ghost"
                     onClick={() => removeLine(l.itemId)}
+                    aria-label={`Remove ${l.item.name} from cart`}
                   >
                     Remove
                   </button>
@@ -114,7 +119,14 @@ export function CartPage() {
               </li>
             ))}
           </ul>
-          <div className="card" style={{ padding: "1.25rem", maxWidth: "420px" }}>
+          <aside
+            className="card"
+            aria-labelledby="cart-summary-heading"
+            style={{ padding: "1.25rem", width: "100%", maxWidth: "420px", minWidth: 0 }}
+          >
+            <h2 id="cart-summary-heading" className="display" style={{ margin: "0 0 0.65rem", fontSize: "1.25rem" }}>
+              Summary
+            </h2>
             <p style={{ margin: "0 0 0.5rem", fontSize: "1.1rem" }}>
               Subtotal (estimate):{" "}
               <strong>${subtotal.toFixed(2)}</strong>
@@ -125,7 +137,7 @@ export function CartPage() {
             <Link to="/checkout" className="btn btn-primary" style={{ marginTop: "1rem", width: "100%" }}>
               Proceed to checkout
             </Link>
-          </div>
+          </aside>
         </>
       )}
     </div>

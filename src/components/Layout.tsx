@@ -11,7 +11,7 @@ export function Layout() {
   const count = lines.reduce((s, l) => s + l.quantity, 0);
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", minWidth: 0 }}>
       <header
         style={{
           borderBottom: "1px solid var(--color-border)",
@@ -33,7 +33,7 @@ export function Layout() {
             flexWrap: "wrap",
           }}
         >
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Link to="/" style={{ textDecoration: "none", color: "inherit", minWidth: 0 }}>
             <span className="display" style={{ fontSize: "1.5rem" }}>
               Vibing Kitchen
             </span>
@@ -49,6 +49,7 @@ export function Layout() {
             </span>
           </Link>
           <nav
+            aria-label="Primary navigation"
             style={{
               display: "flex",
               gap: "1.25rem",
@@ -71,7 +72,7 @@ export function Layout() {
           </nav>
         </div>
       </header>
-      <main style={{ flex: 1, padding: "2rem 0 3rem" }}>
+      <main style={{ flex: 1, padding: "2rem 0 3rem", minWidth: 0, width: "100%", boxSizing: "border-box" }}>
         <Outlet />
       </main>
       <footer

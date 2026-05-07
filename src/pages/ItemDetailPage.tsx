@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { NutritionTable } from "../components/NutritionTable";
 import { getItemById } from "../data/menu";
+import { MENU_CATEGORY_LABEL } from "../data/menuCategories";
 import { useCart } from "../context/CartContext";
 
 export function ItemDetailPage() {
@@ -13,6 +14,9 @@ export function ItemDetailPage() {
   if (!item) {
     return (
       <div className="shell">
+        <h1 className="display" style={{ fontSize: "1.75rem" }}>
+          Dish not found
+        </h1>
         <p>We couldn&apos;t find that dish.</p>
         <button type="button" className="btn btn-ghost" onClick={() => navigate("/menu")}>
           Back to menu
@@ -24,17 +28,13 @@ export function ItemDetailPage() {
   return (
     <div className="shell">
       <p style={{ marginTop: 0 }}>
-        <Link to="/menu">← Menu</Link>
+        <Link to="/menu">
+          <span aria-hidden="true">← </span>
+          Back to menu
+        </Link>
       </p>
-      <div
-        style={{
-          display: "grid",
-          gap: "2rem",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          alignItems: "start",
-        }}
-      >
-        <div>
+      <div className="detail-grid">
+        <div style={{ minWidth: 0 }}>
           <img
             src={item.imageUrl}
             alt={item.name}
@@ -48,9 +48,9 @@ export function ItemDetailPage() {
             }}
           />
         </div>
-        <div>
-          <span className="badge">{item.category}</span>
-          <h1 className="display" style={{ fontSize: "2rem", margin: "0.5rem 0" }}>
+        <div style={{ minWidth: 0 }}>
+          <span className="badge">{MENU_CATEGORY_LABEL[item.category]}</span>
+          <h1 id="dish-detail-title" className="display" style={{ fontSize: "2rem", margin: "0.5rem 0" }}>
             {item.name}
           </h1>
           <p style={{ color: "var(--color-muted)" }}>{item.portionNote}</p>
@@ -69,8 +69,16 @@ export function ItemDetailPage() {
               <li key={ing}>{ing}</li>
             ))}
           </ul>
+          <span id="dish-detail-add-label" className="visually-hidden">
+            Add to cart
+          </span>
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginTop: "1rem" }}>
-            <button type="button" className="btn btn-primary" onClick={() => addLine(item.id, 1)}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              aria-labelledby="dish-detail-title dish-detail-add-label"
+              onClick={() => addLine(item.id, 1)}
+            >
               Add to cart
             </button>
             <Link to="/cart" className="btn btn-ghost">
@@ -79,7 +87,7 @@ export function ItemDetailPage() {
           </div>
         </div>
       </div>
-      <section style={{ marginTop: "2.5rem", maxWidth: "520px" }}>
+      <section style={{ marginTop: "2.5rem", maxWidth: "520px", width: "100%", minWidth: 0 }}>
         <NutritionTable n={item.nutrition} />
       </section>
     </div>

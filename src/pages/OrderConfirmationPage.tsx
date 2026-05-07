@@ -41,7 +41,9 @@ export function OrderConfirmationPage() {
         style={{
           padding: "1.5rem",
           marginTop: "1.5rem",
+          width: "100%",
           maxWidth: "640px",
+          minWidth: 0,
         }}
       >
         <header
@@ -61,7 +63,7 @@ export function OrderConfirmationPage() {
               Homemade catering · pickup
             </p>
           </div>
-          <div style={{ textAlign: "right" }}>
+          <div style={{ textAlign: "right", minWidth: 0 }}>
             <div style={{ fontWeight: 700 }}>{order.id}</div>
             <div style={{ fontSize: "0.9rem", color: "var(--color-muted)" }}>
               {placed.toLocaleString()}
@@ -92,8 +94,22 @@ export function OrderConfirmationPage() {
           <h2 className="display" style={{ fontSize: "1.15rem", margin: "0 0 0.5rem" }}>
             Contact
           </h2>
-          <p style={{ margin: 0, color: "var(--color-muted)" }}>
-            {order.contactName} · {order.contactEmail} · {order.contactPhone}
+          <p
+            style={{
+              margin: 0,
+              color: "var(--color-muted)",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "0.25rem",
+              alignItems: "baseline",
+              minWidth: 0,
+            }}
+          >
+            <span>{order.contactName}</span>
+            <span aria-hidden="true">·</span>
+            <span>{order.contactEmail}</span>
+            <span aria-hidden="true">·</span>
+            <span>{order.contactPhone}</span>
           </p>
         </section>
 
@@ -118,34 +134,82 @@ export function OrderConfirmationPage() {
           </section>
         )}
 
-        <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem" }}>
-          <thead>
-            <tr style={{ borderBottom: "2px solid var(--color-ink)" }}>
-              <th style={{ textAlign: "left", padding: "0.5rem 0" }}>Item</th>
-              <th style={{ textAlign: "right", padding: "0.5rem 0" }}>Qty</th>
-              <th style={{ textAlign: "right", padding: "0.5rem 0" }}>Line</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.lines.map((l) => (
-              <tr key={l.item.id} style={{ borderBottom: "1px solid var(--color-border)" }}>
-                <td style={{ padding: "0.6rem 0" }}>{l.item.name}</td>
-                <td style={{ textAlign: "right" }}>{l.quantity}</td>
-                <td style={{ textAlign: "right" }}>${l.lineTotal.toFixed(2)}</td>
+        <div className="table-scroll" style={{ marginTop: "1rem" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <caption className="visually-hidden">Line items</caption>
+            <thead>
+              <tr style={{ borderBottom: "2px solid var(--color-ink)" }}>
+                <th scope="col" style={{ textAlign: "left", padding: "0.5rem 0" }}>
+                  Item
+                </th>
+                <th scope="col" style={{ textAlign: "right", padding: "0.5rem 0" }}>
+                  Qty
+                </th>
+                <th scope="col" style={{ textAlign: "right", padding: "0.5rem 0" }}>
+                  Line total
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div style={{ marginTop: "1rem", textAlign: "right" }}>
-          <div>Subtotal: ${order.subtotal.toFixed(2)}</div>
-          <div style={{ color: "var(--color-muted)", fontSize: "0.95rem" }}>
-            Est. tax: ${order.estimatedTax.toFixed(2)}
-          </div>
-          <div style={{ fontSize: "1.25rem", fontWeight: 800, marginTop: "0.35rem" }}>
-            Total: ${order.total.toFixed(2)}
-          </div>
+            </thead>
+            <tbody>
+              {order.lines.map((l) => (
+                <tr key={l.item.id} style={{ borderBottom: "1px solid var(--color-border)" }}>
+                  <th
+                    scope="row"
+                    style={{ padding: "0.6rem 0", fontWeight: 600, textAlign: "left" }}
+                  >
+                    {l.item.name}
+                  </th>
+                  <td style={{ textAlign: "right" }}>{l.quantity}</td>
+                  <td style={{ textAlign: "right" }}>${l.lineTotal.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+
+        <dl aria-label="Invoice totals" style={{ margin: "1rem 0 0", textAlign: "right", minWidth: 0 }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+              gap: "0.35rem 2rem",
+            }}
+          >
+            <dt style={{ margin: 0, fontWeight: 600 }}>Subtotal</dt>
+            <dd style={{ margin: 0 }}>
+              ${order.subtotal.toFixed(2)}
+            </dd>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+              gap: "0.35rem 2rem",
+              marginTop: "0.35rem",
+              color: "var(--color-muted)",
+              fontSize: "0.95rem",
+            }}
+          >
+            <dt style={{ margin: 0 }}>Est. tax</dt>
+            <dd style={{ margin: 0 }}>${order.estimatedTax.toFixed(2)}</dd>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+              gap: "0.35rem 2rem",
+              marginTop: "0.5rem",
+              fontSize: "1.25rem",
+              fontWeight: 800,
+            }}
+          >
+            <dt style={{ margin: 0 }}>Total</dt>
+            <dd style={{ margin: 0 }}>${order.total.toFixed(2)}</dd>
+          </div>
+        </dl>
       </div>
 
       <p>

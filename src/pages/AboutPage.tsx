@@ -1,6 +1,6 @@
 export function AboutPage() {
   return (
-    <div className="shell" style={{ maxWidth: "720px" }}>
+    <div className="shell" style={{ maxWidth: "720px", width: "100%", minWidth: 0 }}>
       <h1 className="display" style={{ fontSize: "2.25rem" }}>
         About Vibing Kitchen
       </h1>

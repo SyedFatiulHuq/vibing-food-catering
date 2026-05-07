@@ -5,16 +5,9 @@ import {
   readableDate,
   weekdayFromIso,
 } from "../lib/dates";
+import { MENU_CATEGORY_LABEL, MENU_CATEGORY_ORDER } from "../data/menuCategories";
 import { getMenuForWeekday } from "../data/menu";
 import type { MenuCategory, MenuItem } from "../types";
-
-const categoryOrder: MenuCategory[] = ["protein", "vegetarian", "sides"];
-
-const categoryLabel: Record<MenuCategory, string> = {
-  protein: "Protein",
-  vegetarian: "Vegetarian",
-  sides: "Sides",
-};
 
 function groupByCategory(items: MenuItem[]): Record<MenuCategory, MenuItem[]> {
   const empty: Record<MenuCategory, MenuItem[]> = {
@@ -57,17 +50,27 @@ export function MenuPage() {
         </p>
       </header>
 
-      <div
-        className="card"
+      <section
+        className="card menu-params-grid"
+        aria-labelledby="menu-date-guest-heading"
         style={{
           padding: "1.25rem",
           marginBottom: "2rem",
-          display: "grid",
-          gap: "1rem",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          alignItems: "end",
+          minWidth: 0,
         }}
       >
+        <h2
+          id="menu-date-guest-heading"
+          className="display"
+          style={{
+            gridColumn: "1 / -1",
+            margin: 0,
+            fontSize: "1.35rem",
+            fontWeight: 600,
+          }}
+        >
+          Choose date &amp; guests
+        </h2>
         <div className="field">
           <label htmlFor="catering-date">Catering date</label>
           <select
@@ -93,16 +96,24 @@ export function MenuPage() {
             onChange={(e) => setGuestCount(Number(e.target.value))}
           />
         </div>
-        <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--color-muted)" }}>
+        <p
+          style={{
+            margin: 0,
+            fontSize: "0.9rem",
+            color: "var(--color-muted)",
+            gridColumn: "1 / -1",
+            minWidth: 0,
+          }}
+        >
           Menu day: <strong style={{ color: "var(--color-ink)" }}>{readableDate(cateringDateIso)}</strong>{" "}
           · Cart pricing uses your guest count for per-guest items.
         </p>
-      </div>
+      </section>
 
-      {categoryOrder.map((cat) => (
+      {MENU_CATEGORY_ORDER.map((cat) => (
         <section key={cat} style={{ marginBottom: "2.5rem" }}>
           <h2 className="display" style={{ fontSize: "1.75rem", marginBottom: "1rem" }}>
-            {categoryLabel[cat]}
+            {MENU_CATEGORY_LABEL[cat]}
           </h2>
           <div className="grid-menu">
             {grouped[cat].map((item) => (
@@ -110,15 +121,20 @@ export function MenuPage() {
                 <Link to={`/item/${item.id}`} style={{ textDecoration: "none", color: "inherit" }}>
                   <img
                     src={item.imageUrl}
-                    alt={item.name}
+                    alt=""
                     width={640}
                     height={480}
                     style={{ aspectRatio: "4/3", objectFit: "cover", width: "100%" }}
                     loading="lazy"
                   />
                   <div style={{ padding: "1rem" }}>
-                    <span className="badge">{categoryLabel[item.category]}</span>
-                    <h3 style={{ margin: "0.5rem 0 0.25rem", fontSize: "1.15rem" }}>{item.name}</h3>
+                    <span className="badge">{MENU_CATEGORY_LABEL[item.category]}</span>
+                    <h3
+                      id={`menu-item-${item.id}-title`}
+                      style={{ margin: "0.5rem 0 0.25rem", fontSize: "1.15rem" }}
+                    >
+                      {item.name}
+                    </h3>
                     <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--color-muted)" }}>
                       {item.portionNote}
                     </p>
@@ -128,16 +144,25 @@ export function MenuPage() {
                     </p>
                   </div>
                 </Link>
-                <div style={{ padding: "0 1rem 1rem", display: "flex", gap: "0.5rem" }}>
+                <div style={{ padding: "0 1rem 1rem", display: "flex", flexWrap: "wrap", gap: "0.5rem", minWidth: 0 }}>
+                  <span id={`menu-item-${item.id}-add`} className="visually-hidden">
+                    Add to cart
+                  </span>
                   <button
                     type="button"
                     className="btn btn-primary"
-                    style={{ flex: 1 }}
+                    style={{ flex: "1 1 140px" }}
+                    aria-labelledby={`menu-item-${item.id}-title menu-item-${item.id}-add`}
                     onClick={() => addLine(item.id, 1)}
                   >
                     Add to cart
                   </button>
-                  <Link to={`/item/${item.id}`} className="btn btn-ghost">
+                  <Link
+                    to={`/item/${item.id}`}
+                    className="btn btn-ghost"
+                    style={{ flex: "1 1 auto" }}
+                    aria-label={`${item.name}, details`}
+                  >
                     Details
                   </Link>
                 </div>

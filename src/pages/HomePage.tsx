@@ -3,16 +3,8 @@ import { Link } from "react-router-dom";
 export function HomePage() {
   return (
     <div className="shell">
-      <section
-        style={{
-          display: "grid",
-          gap: "2rem",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          alignItems: "center",
-          padding: "2rem 0 3rem",
-        }}
-      >
-        <div>
+      <section className="home-hero-grid">
+        <div style={{ minWidth: 0 }}>
           <p className="badge" style={{ marginBottom: "0.75rem" }}>
             Pickup · Made to order
           </p>
@@ -37,6 +29,7 @@ export function HomePage() {
           style={{
             padding: "1.5rem",
             background: "linear-gradient(145deg, #fffdf8, #e8dcc8)",
+            minWidth: 0,
           }}
         >
           <h2 className="display" style={{ marginTop: 0 }}>How it works</h2>

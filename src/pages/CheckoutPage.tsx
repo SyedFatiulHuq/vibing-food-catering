@@ -5,6 +5,15 @@ import { useOrders } from "../context/OrdersContext";
 import type { CheckoutPayload } from "../types";
 import { readableDate } from "../lib/dates";
 
+const PICKUP_WINDOW_VALUES = ["12-14", "14-16", "16-18", "18-20"] as const;
+
+const pickupWindowLabel: Record<(typeof PICKUP_WINDOW_VALUES)[number], string> = {
+  "12-14": "12:00 PM – 2:00 PM",
+  "14-16": "2:00 PM – 4:00 PM",
+  "16-18": "4:00 PM – 6:00 PM",
+  "18-20": "6:00 PM – 8:00 PM",
+};
+
 export function CheckoutPage() {
   const navigate = useNavigate();
   const { placeOrder } = useOrders();
@@ -20,7 +29,7 @@ export function CheckoutPage() {
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
-  const [pickupWindow, setPickupWindow] = useState("4:00 PM – 6:00 PM");
+  const [pickupWindow, setPickupWindow] = useState<(typeof PICKUP_WINDOW_VALUES)[number]>("16-18");
   const [paymentMethod, setPaymentMethod] =
     useState<CheckoutPayload["paymentMethod"]>("card");
   const [cardLastFour, setCardLastFour] = useState("");
@@ -52,7 +61,7 @@ export function CheckoutPage() {
     const payload: CheckoutPayload = {
       cateringDate: cateringDateIso,
       guestCount,
-      pickupWindow,
+      pickupWindow: pickupWindowLabel[pickupWindow],
       contactName: contactName.trim(),
       contactEmail: contactEmail.trim(),
       contactPhone: contactPhone.trim(),
@@ -73,7 +82,9 @@ export function CheckoutPage() {
 
   return (
     <div className="shell">
-      <h1 className="display" style={{ fontSize: "2rem" }}>Checkout</h1>
+      <h1 id="checkout-page-title" className="display" style={{ fontSize: "2rem" }}>
+        Checkout
+      </h1>
       <p style={{ color: "var(--color-muted)" }}>
         Pickup date: <strong>{readableDate(cateringDateIso)}</strong> · Guests:{" "}
         <strong>{guestCount}</strong>
@@ -85,36 +96,44 @@ export function CheckoutPage() {
         </p>
       ) : (
         <form
+          aria-labelledby="checkout-page-title"
           onSubmit={handleSubmit}
           style={{
             display: "grid",
             gap: "2rem",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))",
             alignItems: "start",
+            width: "100%",
+            minWidth: 0,
           }}
         >
-          <div className="card" style={{ padding: "1.25rem" }}>
-            <h2 className="display" style={{ marginTop: 0 }}>Pickup</h2>
+          <section className="card" aria-labelledby="checkout-pickup-heading" style={{ padding: "1.25rem" }}>
+            <h2 className="display" id="checkout-pickup-heading" style={{ marginTop: 0 }}>
+              Pickup
+            </h2>
             <div className="field">
               <label htmlFor="pickup-window">Pickup window</label>
               <select
                 id="pickup-window"
                 value={pickupWindow}
-                onChange={(e) => setPickupWindow(e.target.value)}
+                onChange={(e) => setPickupWindow(e.target.value as (typeof PICKUP_WINDOW_VALUES)[number])}
               >
-                <option>12:00 PM – 2:00 PM</option>
-                <option>2:00 PM – 4:00 PM</option>
-                <option>4:00 PM – 6:00 PM</option>
-                <option>6:00 PM – 8:00 PM</option>
+                {PICKUP_WINDOW_VALUES.map((key) => (
+                  <option key={key} value={key}>
+                    {pickupWindowLabel[key]}
+                  </option>
+                ))}
               </select>
             </div>
             <p style={{ fontSize: "0.9rem", color: "var(--color-muted)" }}>
               We&apos;ll confirm the exact pickup slot by phone or email.
             </p>
-          </div>
+          </section>
 
-          <div className="card" style={{ padding: "1.25rem" }}>
-            <h2 className="display" style={{ marginTop: 0 }}>Contact</h2>
+          <section className="card" aria-labelledby="checkout-contact-heading" style={{ padding: "1.25rem" }}>
+            <h2 className="display" id="checkout-contact-heading" style={{ marginTop: 0 }}>
+              Contact
+            </h2>
             <div className="field">
               <label htmlFor="name">Full name</label>
               <input
@@ -147,10 +166,12 @@ export function CheckoutPage() {
                 required
               />
             </div>
-          </div>
+          </section>
 
-          <div className="card" style={{ padding: "1.25rem" }}>
-            <h2 className="display" style={{ marginTop: 0 }}>Payment (demo)</h2>
+          <section className="card" aria-labelledby="checkout-payment-heading" style={{ padding: "1.25rem" }}>
+            <h2 className="display" id="checkout-payment-heading" style={{ marginTop: 0 }}>
+              Payment (demo)
+            </h2>
             <p style={{ fontSize: "0.9rem", color: "var(--color-muted)" }}>
               No real charges are processed. Choose a method for the invoice record.
             </p>
@@ -175,6 +196,9 @@ export function CheckoutPage() {
                   <input
                     id="last4"
                     inputMode="numeric"
+                    autoComplete="off"
+                    aria-required={paymentMethod === "card"}
+                    required={paymentMethod === "card"}
                     maxLength={4}
                     placeholder="4242"
                     value={cardLastFour}
@@ -193,10 +217,16 @@ export function CheckoutPage() {
                 </div>
               </>
             )}
-          </div>
+          </section>
 
-          <div className="card" style={{ padding: "1.25rem", gridColumn: "1 / -1" }}>
-            <h2 className="display" style={{ marginTop: 0 }}>Special instructions</h2>
+          <section
+            className="card"
+            aria-labelledby="checkout-notes-heading"
+            style={{ padding: "1.25rem", gridColumn: "1 / -1" }}
+          >
+            <h2 className="display" id="checkout-notes-heading" style={{ marginTop: 0 }}>
+              Special instructions
+            </h2>
             <div className="field">
               <label htmlFor="notes">Allergies, dietary notes, packaging</label>
               <textarea
@@ -206,14 +236,14 @@ export function CheckoutPage() {
               />
             </div>
             {error && (
-              <p style={{ color: "#9a3412", fontWeight: 600 }} role="alert">
+              <p id="checkout-form-error" style={{ color: "#9a3412", fontWeight: 600 }} role="alert">
                 {error}
               </p>
             )}
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" aria-describedby={error ? "checkout-form-error" : undefined}>
               Place order &amp; view invoice
             </button>
-          </div>
+          </section>
         </form>
       )}
     </div>
