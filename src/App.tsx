@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import { OrdersProvider } from "./context/OrdersContext";
 import { Layout } from "./components/Layout";
@@ -13,7 +13,7 @@ import { ContactPage } from "./pages/ContactPage";
 
 export default function App() {
   return (
-    <BrowserRouter basename="/vibing-food-catering/">
+    <HashRouter>
       <CartProvider>
         <OrdersProvider>
           <Routes>
@@ -31,6 +31,6 @@ export default function App() {
           </Routes>
         </OrdersProvider>
       </CartProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
