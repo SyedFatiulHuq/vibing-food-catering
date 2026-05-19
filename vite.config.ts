@@ -3,5 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/vibing-food-catering/",
+  base: process.env.GITHUB_REPOSITORY 
+    ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/${process.env.GITHUB_REF_NAME}/`
+    : '/',
 });
