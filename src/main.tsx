@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import App from "./App";
 import "./styles/global.css";
 import "./styles/layout.css";
@@ -11,8 +11,8 @@ if (!container) throw new Error("Root element not found");
 
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter basename="/vibing-food-catering">
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 );
